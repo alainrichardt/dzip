@@ -6,12 +6,11 @@ The dzip app will compress DNA strings, written for tom at Canterbury University
 
 ###Usage:
 
-dzip <input file> <output file>
-dunzip <input file> <output file>
+**dzip inputfile outputfile**
 
-By convention compressed files should have the '.dz' extension.
+**dunzip inputfile outputfile**
 
-Included in this repo is the sample DNA requence for the Acaryochloris Marina Bacteria
+By convention compressed files should have the '.dz' extension, but this is not enforced by the library. Included in this repo is the sample DNA requence for the Acaryochloris Marina Bacteria
 
 ###.dz File Format
 
@@ -26,11 +25,12 @@ At the moment, DNA info is stored in the DAT format which is the raw output of t
 
 The DNA sequence is stored in bytes, a single byte represents 4 base pairs. When the input sequence is not a multiple of 4, then the last byte may not be a complete pair, this is indicated in the file header
 
-File Header
-  Bytes     Explanation
-  4         'DNAZ' Indicating this is a '.dz' file
-  1         Single byte indicating the number of sequences stored in the last
-            byte. Either '1,2,3 or 4'
+####File Header
+
+    Bytes     Explanation
+    4         'DNAZ' Indicating this is a '.dz' file
+    1         Single byte indicating the number of sequences stored in the last
+              byte. Either '1,2,3 or 4'
 
 File Data
 The remainder of the bytes in the file is the encoded data. The length of data in the last byte is indicated in the header.
