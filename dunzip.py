@@ -2,11 +2,21 @@ import sys
 import os.path as path
 
 def decodeByte( byte, lastb_length = None):
+
     quad = ''
-    quad += dnaDecode( 0b00000011 & byte )
-    quad += dnaDecode( 0b00000011 & (byte >> 2) )
-    quad += dnaDecode( 0b00000011 & (byte >> 4) )
-    quad += dnaDecode( 0b00000011 & (byte >> 6) )
+
+    if lastb_length == None or lastb_length > 0:
+        quad += dnaDecode( 0b00000011 & byte )
+    
+    if lastb_length == None or lastb_length > 1:
+        quad += dnaDecode( 0b00000011 & (byte >> 2) )
+
+    if lastb_length == None or lastb_length > 2:
+        quad += dnaDecode( 0b00000011 & (byte >> 4) )
+
+    if lastb_length == None:
+        quad += dnaDecode( 0b00000011 & (byte >> 6) )
+
     return quad
 
 def dnaDecode( byte ):
@@ -28,15 +38,21 @@ if __name__ == "__main__":
     inp = open(sys.argv[1], "rb")
 
     # Read the header
-    headr = inp.read(5)
+    headr = inp.read(4)
     lastbyte = inp.read(1)
-    if( headr != 'DNAZ1' ):
+
+    if( headr != 'DNAZ' ):
         print 'Error : Only DNAZ protocol v1 files supported'
         sys.exit()
 
-    byte = None
-    while byte == None or byte != "":
+    filesize = path.getsize(sys.argv[1]) - 4  # 4 bytes for header
+    bytes_read = 1
+    while bytes_read < filesize:
+        bytes_read = bytes_read + 1
         byte = inp.read(1)
-        if (len(byte) > 0):
+        
+        if (len(byte) > 0) and bytes_read == filesize and lastbyte != '0':
+            out.write(decodeByte( ord(byte), ord(lastbyte) ))
+        else:
             out.write(decodeByte( ord(byte) ))
 

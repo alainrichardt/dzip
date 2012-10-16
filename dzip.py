@@ -31,8 +31,8 @@ if __name__ == "__main__":
     out = open(sys.argv[2], "wb")
 
     # Generate header
-    out.write( 'DNAZ1' )
-    out.write( chr(path.getsize(sys.argv[1]) % 4) )
+    out.write( 'DNAZ' )
+    out.write( str( path.getsize(sys.argv[1]) % 4 ) )
 
     with open(sys.argv[1], "rb") as f:
         bytes = None
